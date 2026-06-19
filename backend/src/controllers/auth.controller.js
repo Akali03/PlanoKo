@@ -1,52 +1,29 @@
-import { OAuth2Client } from "google-auth-library";
-import { User } from "../models/user.model.js";
-import jwt from "jsonwebtoken";
+import { loginWithGoogle } from "../services/auth.service.js";
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const googleAuth = async (req, res) => {
   try {
-    const { token } = req.body;
+      const { token } = req.body;
+      if(!token){
+        return res.status(400).json({message:"Google token is required"
+        });}
 
-    const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience: process.env.GOOGLE_CLIENT_ID,
-    });
+        const { user , jwtToken } = await loginWithGoogle(token);
 
-    const payload = ticket.getPayload();
+        res.cookie("accessToken", jwtToken,{
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+          httpOnly:true,
+          secure: false,
+          sameSite:"lax"
+        })
 
-    const { sub, email, name, picture } = payload;
-    console.log(sub);
-    
-      // check if user exists or not
-        let user = await User.findOne({ googleId: sub });
-       // console.log(user._id);
-        
-        if (!user) {
-            user = await User.create({
-                googleId: sub,
-                email,
-                name,
-                picture,
-            });
-        }
-
-    const jwtToken = jwt.sign(
-        { userId: user.id },
-        process.env.SECRET,
-        { expiresIn: "7d" }
-    );
-
-    res.cookie("token", jwtToken, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax",
-    });
-
-    res.json({ user });
+        res.status(200).json({
+           user
+        })
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+      res.status(401).json({
+        error: error.message,
+      });
   }
 };
 
