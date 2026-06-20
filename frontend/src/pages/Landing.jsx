@@ -16,13 +16,13 @@ function Landing(){
                 headers: {
                 "Content-Type": "application/json",
                 },
-                credentials: "include", // IMPORTANT (this replaces withCredentials)
+                credentials: "include", 
                 body: JSON.stringify({ token }),
             });
          const data = await res.json();
       console.log("Login success:", data);
 
-      navigate("/home");
+      navigate("/dashboard");
         } catch (error) {
                   console.log("Login failed:", error);
 

@@ -1,7 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
-import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import PublicRoute from "./utils/PublicRoute";
 import './App.css'
 
 function App() {
@@ -9,9 +10,11 @@ function App() {
   return (
  
       <Routes>
-        <Route path="/" element={<Landing />} />
+         <Route element={<PublicRoute />}>
+           <Route path="/" element={<Landing />} />
+        </Route>
         <Route element={<ProtectedRoute />}>
-          <Route path="/home" element={<Home />}/>
+          <Route path="/dashboard" element={<Dashboard />}/>
         </Route>
       </Routes>
   )
