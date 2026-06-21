@@ -3,7 +3,6 @@ import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import PublicRoute from "./utils/PublicRoute";
-import './App.css'
 
 function App() {
 

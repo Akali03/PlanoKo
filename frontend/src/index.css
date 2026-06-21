@@ -2,3 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+:root{
+    --foreground: #e2e2ee;
+}
+body{
+    color: var(--foreground);
+}

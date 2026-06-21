@@ -1,46 +1,38 @@
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
-function Landing(){
-    const navigate = useNavigate();
-    //import useGoogleOneTapLogin
-    // useGoogleOneTapLogin({onSuccess:(credentialResponse)=>{
-    //     console.log(credentialResponse);
-        
-    // }})
 
-    const handleSuccess = async(credentialResponse)=> {
+function Landing() {
+    const navigate = useNavigate();
+
+    const handleSuccess = async (credentialResponse) => {
         try {
             const token = credentialResponse.credential;
-               const res = await fetch("http://localhost:3000/api/auth/google", {
+            const res = await fetch("http://localhost:3000/api/auth/google", {
                 method: "POST",
-                headers: {
-                "Content-Type": "application/json",
-                },
-                credentials: "include", 
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
                 body: JSON.stringify({ token }),
             });
-         const data = await res.json();
-      console.log("Login success:", data);
-
-      navigate("/dashboard");
+            const data = await res.json();
+            console.log("Login success:", data);
+            navigate("/dashboard");
         } catch (error) {
-                  console.log("Login failed:", error);
-
+            console.log("Login failed:", error);
         }
     }
 
-    return(
-        <div className="w-40">
-            <h1>Google Login</h1>
-            <GoogleLogin
-                onSuccess={handleSuccess} 
-                onError={()=>console.log('login failed')
-                
-                }
-            />
-            
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-main">
+            <div className="bg-light p-12 rounded-2xl shadow-lg text-center w-full max-w-sm">
+                <h1 className="text-4xl font-bold mb-2">PlanoKo</h1>
+                <p className="text-sm mb-8 text-primary">AI-Powered Task & Planning Assistant</p>
+                <GoogleLogin
+                    onSuccess={handleSuccess}   
+                    onError={() => console.log('login failed')}
+                />
+            </div>
         </div>
-    )
+    );
 }
 
 export default Landing;

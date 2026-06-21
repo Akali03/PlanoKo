@@ -22,7 +22,7 @@ function Dashboard() {
     };
 
     return (
-        <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+        <div className="h-screen p-3 font-sans bg-main">
             {user ? (
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                     <img src={user.picture} alt={user.name} style={{ width: 48, height: 48, borderRadius: "50%" }} />
