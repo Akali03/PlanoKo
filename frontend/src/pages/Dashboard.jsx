@@ -1,11 +1,12 @@
 import { googleLogout } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Navbar from "../components/nav/Navbar";
 
 function Dashboard() {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
-
+    
     useEffect(() => {
         fetch("http://localhost:3000/api/auth/me", { credentials: "include" })
             .then(res => res.json())
@@ -23,7 +24,7 @@ function Dashboard() {
 
     return (
         <div className="h-screen p-3 font-sans bg-main">
-            {user ? (
+            {/* {user ? (
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                     <img src={user.picture} alt={user.name} style={{ width: 48, height: 48, borderRadius: "50%" }} />
                     <div>
@@ -34,7 +35,9 @@ function Dashboard() {
                 </div>
             ) : (
                 <p>Loading...</p>
-            )}
+            )} */}
+        <Navbar user={user} />
+            
         </div>
     );
 }

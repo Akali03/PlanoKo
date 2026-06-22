@@ -3,6 +3,7 @@ import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import PublicRoute from "./utils/PublicRoute";
+import Profile from "./pages/Profile";
 
 function App() {
 
@@ -14,6 +15,9 @@ function App() {
         </Route>
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />}/>
+        </Route>
+         <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<Profile />}/>
         </Route>
       </Routes>
   )
