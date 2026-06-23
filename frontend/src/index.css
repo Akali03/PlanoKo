@@ -4,7 +4,9 @@
 
 :root{
     --foreground: #e2e2ee;
+    --bg-background: #09090e;
 }
 body{
     color: var(--foreground);
+    background-color: var(--bg-background);
 }

@@ -3,10 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navbar from "../components/nav/Navbar";
 
+const TAGS = ["school", "work", "personal", "health", "finance"];
+
 function Dashboard() {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
-    
+    const [task, setTask] = useState("");
+    const [priority, setPriority] = useState("medium");
+    const [tags, setTags] = useState([]);
+
     useEffect(() => {
         fetch("http://localhost:3000/api/auth/me", { credentials: "include" })
             .then(res => res.json())
@@ -22,22 +27,65 @@ function Dashboard() {
         navigate('/');
     };
 
+    const handleTagChange = (e) => {
+        setTags([...e.target.selectedOptions].map(o => o.value));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await fetch("http://localhost:3000/api/tasks/addtask", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ task, priority, tags }),
+        });
+        setTask("");
+        setPriority("medium");
+        setTags([]);
+    };
+
     return (
-        <div className="h-screen p-3 font-sans bg-main">
-            {/* {user ? (
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                    <img src={user.picture} alt={user.name} style={{ width: 48, height: 48, borderRadius: "50%" }} />
-                    <div>
-                        <h2 style={{ margin: 0 }}>{user.name}</h2>
-                        <p style={{ margin: 0, color: "gray" }}>{user.email}</p>
-                    </div>
-                    <button onClick={handleLogout} className="bg-red-500 rounded-l" style={{ marginLeft: "auto", padding: "0.5rem 1rem", cursor: "pointer" }}>Logout</button>
-                </div>
-            ) : (
-                <p>Loading...</p>
-            )} */}
-        <Navbar user={user} />
-            
+        <div className="min-h-screen bg-main font-sans">
+            <Navbar user={user} />
+
+            <div className="max-w-xl mx-auto mt-10 bg-light p-6 rounded-2xl shadow bg-secondary">
+                <h2 className="text-lg font-semibold text-dark mb-4">Add Task</h2>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    <input
+                        type="text"
+                        placeholder="Task name..."
+                        value={task}
+                        onChange={e => setTask(e.target.value)}
+                        className="bg-secondary border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-primary"
+                        required
+                    />
+
+                    <select
+                        value={priority}
+                        onChange={e => setPriority(e.target.value)}
+                        className="bg-secondary border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-primary"
+                    >
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+
+                    <select
+                        
+                        value={tags}
+                        onChange={handleTagChange}
+                        className="bg-secondary border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-primary"
+                    >
+                        {TAGS.map(tag => (
+                            <option key={tag} value={tag}>{tag}</option>
+                        ))}
+                    </select>
+
+                    <button type="submit" className="bg-primary text-white rounded-lg py-2 text-sm font-medium hover:opacity-90">
+                        Add Task
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }
