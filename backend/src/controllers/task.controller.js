@@ -64,7 +64,41 @@ const getTasks = async(req, res) => {
     }
 }   
 
+const removeTask = async(req, res) => {
+    try {
+        
+            const { id } = req.params;
+
+               const deleted = await taskModel.findByIdAndDelete({
+                _id: id,
+                userId: req.userId
+            });
+
+              if (!deleted) {
+            return res.status(404).json({
+                success: false,
+                message: "Task not found"
+            });
+        }
+
+
+            res.status(200).json({
+                success: true,
+                message: "Task deleted successfully"
+            })
+
+    
+    } catch (error) {
+        console.log(error);
+        
+         res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+}
+
 export {
     addTask,
-    getTasks
+    getTasks,
+    removeTask
 }

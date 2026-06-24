@@ -48,11 +48,11 @@ function Dashboard() {
         <div className="min-h-screen bg-main font-sans">
             <Navbar user={user} />
 
-            <div className="max-w-xl mx-auto mt-10 bg-light p-6 rounded-2xl shadow bg-secondary">
+            <div className="max-w-3xl mx-auto mt-10 p-6 rounded-2xl shadow bg-secondary">
                 <h2 className="text-lg font-semibold text-dark mb-4">Add Task</h2>
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <form onSubmit={handleSubmit} className="flex flex-row flex-1 gap-4">
                     <input
-                        type="text"
+                        type="text" 
                         placeholder="Task name..."
                         value={task}
                         onChange={e => setTask(e.target.value)}
