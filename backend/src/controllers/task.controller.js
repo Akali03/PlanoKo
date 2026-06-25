@@ -64,6 +64,39 @@ const getTasks = async(req, res) => {
     }
 }   
 
+const updateTask = async(req, res) => {
+    try {
+        const { id } = req.params;
+        const { task, priority, tags, completed } = req.body;
+
+             if(priority && !validatePriority(priority)){
+            return res.status(400).json({
+                message: "Invalid priority"
+            })
+        }
+
+        if(tags && !Array.isArray(tags)){
+            return res.status(400).json({
+                message: "Tags must be an array"
+            })
+        }
+
+        if(completed !== undefined && typeof completed !== "boolean"){
+            return res.status(400).json({
+                message: "Completed must be a boolean"
+            })
+        }
+
+        const updates = await taskModel.findOneAndUpdate({
+            _id: id,
+            userId: req.userId
+        })
+        
+    } catch (error) {
+        
+    }
+}
+
 const removeTask = async(req, res) => {
     try {
         
