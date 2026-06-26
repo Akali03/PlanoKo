@@ -6,6 +6,8 @@ function Landing() {
 
     const handleSuccess = async (credentialResponse) => {
         try {
+            console.log(credentialResponse);
+            
             const token = credentialResponse.credential;
             const res = await fetch("http://localhost:3000/api/auth/google", {
                 method: "POST",

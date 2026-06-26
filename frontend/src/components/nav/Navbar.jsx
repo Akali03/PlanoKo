@@ -1,14 +1,22 @@
 import { useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Search, Menu, X } from "lucide-react";
 
-function Navbar({ user }) {
+function Navbar({ user, onMenuToggle, menuOpen }) {
     const navigate = useNavigate();
 
     return (
-        <nav className="flex items-center justify-between px-6 py-3 bg-light shadow-sm border-b border-slate-500">
-            <h1 className="text-xl font-bold text-primary">PlanoKo</h1>
+        <nav className="flex items-center justify-between px-4 md:px-6 py-3 bg-light shadow-sm border-b border-slate-500">
+            <div className="flex items-center gap-3">
+                <button
+                    className="md:hidden text-slate-400 hover:text-primary"
+                    onClick={onMenuToggle}
+                >
+                    {menuOpen ? <X size={20} /> : <Menu size={20} />}
+                </button>
+                <h1 className="text-xl font-bold text-primary">PlanoKo</h1>
+            </div>
 
-            <div className="relative w-full max-w-md">
+            <div className="relative w-full max-w-md hidden md:block mx-6">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                     type="text"
@@ -21,7 +29,7 @@ function Navbar({ user }) {
                 src={user?.picture}
                 alt={user?.name}
                 onClick={() => navigate("/profile")}
-                className="w-9 h-9 rounded-full cursor-pointer hover:ring-2 hover:ring-primary"
+                className="w-9 h-9 rounded-full cursor-pointer hover:ring-2 hover:ring-primary shrink-0"
             />
         </nav>
     );
