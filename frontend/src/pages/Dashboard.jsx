@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/nav/Navbar";
 import Sidebar from "../components/sidebar/Sidebar";
 import RightSidebar from "../components/RightSidebar/RightSidebar";
-import { Circle } from "lucide-react";
+import { Circle, Trash } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { formattedDate } from "../utils/formatDate";
 
@@ -56,6 +56,24 @@ function Dashboard() {
         }
         fetchTaskItem();
     }, []);
+
+    const handleDelete = async (id) => {
+    try {
+        const res = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+            method: "DELETE",
+            credentials: "include",
+        });
+
+        if (!res.ok) {
+            console.error("Failed to delete task:", await res.json().catch(() => null));
+            return;
+        }
+
+        setTaskItems(prev => prev.filter(taskItem => taskItem._id !== id));
+    } catch (err) {
+        console.error("Delete task request failed:", err);
+    }
+};
 
     return (
         <div className="min-h-screen bg-main font-sans">
@@ -158,6 +176,10 @@ function Dashboard() {
                         </span>
                     </div>
                     </div>
+                    <button>
+                         <Trash size={10} onClick={()=>handleDelete(taskItem._id)}/>   
+                    </button>
+                 
                     </div>
                     ))
                    }
