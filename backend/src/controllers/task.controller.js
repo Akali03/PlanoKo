@@ -4,8 +4,13 @@ function validatePriority(priority){
     return ["low", "medium", "high"].includes(priority);
 }
 
-function errorHandler(){
-    return
+function errorHandler(res, error) {
+    console.error(error);
+
+    return res.status(500).json({
+        success: false,
+        message: "Internal server error"
+    });
 }
 
 const addTask = async(req, res) => {
@@ -43,9 +48,7 @@ const addTask = async(req, res) => {
         })
 
     } catch (error) {
-        res.status(500).json({
-            message: "Internal server error"
-        })
+        errorHandler(res, error);
     }
 }
 
@@ -58,28 +61,14 @@ const getTasks = async(req, res) => {
             tasks
         })
     } catch (error) {
-        res.status(500).json({
-            message: "Internal server error"
-        })
+         errorHandler(res, error);
     }
 }   
 
 const updateTask = async(req, res) => {
     try {
         const { id } = req.params;
-        const { task, priority, tags, completed } = req.body;
-
-             if(priority && !validatePriority(priority)){
-            return res.status(400).json({
-                message: "Invalid priority"
-            })
-        }
-
-        if(tags && !Array.isArray(tags)){
-            return res.status(400).json({
-                message: "Tags must be an array"
-            })
-        }
+        const { completed } = req.body;
 
         if(completed !== undefined && typeof completed !== "boolean"){
             return res.status(400).json({
@@ -87,13 +76,25 @@ const updateTask = async(req, res) => {
             })
         }
 
-        const updates = await taskModel.findOneAndUpdate({
-            _id: id,
-            userId: req.userId
-        })
-        
+        const updates = await taskModel.findOneAndUpdate(
+            { _id: id, userId: req.userId },
+            { completed },
+            { returnDocument: "after" }); //Return the updated document after the update
+            //console.log(updates);
+
+            if(!updates) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Task not found"
+                });
+            }
+            
+            res.status(200).json({
+                success: true,
+                task: updates
+            });
     } catch (error) {
-        
+           errorHandler(res, error);
     }
 }
 
@@ -122,16 +123,13 @@ const removeTask = async(req, res) => {
 
     
     } catch (error) {
-        console.log(error);
-        
-         res.status(500).json({
-            message: "Internal server error"
-        })
+         errorHandler(res, error);
     }
 }
 
 export {
     addTask,
     getTasks,
-    removeTask
+    removeTask,
+    updateTask
 }
