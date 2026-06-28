@@ -1,8 +1,6 @@
 import { GoogleLogin } from "@react-oauth/google";
-import { useNavigate } from "react-router-dom";
 
 function Landing() {
-    const navigate = useNavigate();
 
     const handleSuccess = async (credentialResponse) => {
         try {
@@ -17,8 +15,7 @@ function Landing() {
             });
             const data = await res.json();
             console.log("Login success:", data);
-            navigate("/dashboard");
-        } catch (error) {
+       } catch (error) {
             console.log("Login failed:", error);
         }
     }

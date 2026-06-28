@@ -16,6 +16,7 @@ function Dashboard() {
     const [activeView, setActiveView] = useState("all");
     const [menuOpen, setMenuOpen] = useState(false);
     const [taskItems, setTaskItems] = useState([]);
+    const [search, setSearch] = useState("");
 
 
     const handleTagChange = (e) => {
@@ -74,10 +75,16 @@ function Dashboard() {
         console.error("Delete task request failed:", err);
     }
 };
+    const filteredTasks = taskItems.filter((taskItem)=>taskItem.task.toLowerCase().includes(search.toLowerCase().trim()))
 
     return (
         <div className="min-h-screen bg-main font-sans">
-            <Navbar user={user} onMenuToggle={() => setMenuOpen(p => !p)} menuOpen={menuOpen} />
+            <Navbar user={user}
+                    onMenuToggle={() => setMenuOpen(p => !p)} 
+                    menuOpen={menuOpen}
+                    search={search}
+                    setSearch={setSearch}
+                    />
 
             <div className="flex gap-3">
                 <Sidebar
@@ -136,7 +143,7 @@ function Dashboard() {
                   
                    <div className="space-y-3 mt-4">
                      {
-                    taskItems.map((taskItem)=>(
+                    filteredTasks.map((taskItem)=>(
                   <div key={taskItem._id}
                         className="flex 
                               items-start gap-3 

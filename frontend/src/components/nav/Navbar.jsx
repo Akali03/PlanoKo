@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Search, Menu, X } from "lucide-react";
 
-function Navbar({ user, onMenuToggle, menuOpen }) {
+function Navbar({ user, onMenuToggle, menuOpen, search, setSearch }) {
     const navigate = useNavigate();
 
     return (
@@ -17,22 +17,12 @@ function Navbar({ user, onMenuToggle, menuOpen }) {
             </div>
 
             <div className="relative w-full max-w-md hidden md:block mx-6">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    className="w-full border border-primary bg-main rounded-3xl pl-9 pr-4 py-2 focus:outline-none focus:border-primary text-sm"
-                />
+                    <SearchInput search={search} setSearch={setSearch}/>               
             </div>
          {/* Mobile Search */}
-            <div className="md:hidden px-4 py-3 bg-ligh">
+            <div className="md:hidden px-4 py-3 bg-main">
                 <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        className="w-full border border-primary bg-main rounded-full pl-9 pr-4 py-2 text-sm focus:outline-none"
-                    />
+                    <SearchInput search={search} setSearch={setSearch}/>   
                 </div>
             </div>
             <img
@@ -44,6 +34,21 @@ function Navbar({ user, onMenuToggle, menuOpen }) {
         
         </nav>
     );
+}
+
+function SearchInput({search, setSearch}){
+    return(
+        <>
+         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                    type="text"
+                    placeholder="Search your tasks..."
+                    value={search}
+                    onChange={(e)=>setSearch(e.target.value)}
+                    className="w-full border border-primary bg-main rounded-3xl pl-9 pr-4 py-2 focus:outline-none focus:border-primary text-sm"
+                />
+        </>
+    )
 }
 
 export default Navbar;
