@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/nav/Navbar";
 import Sidebar from "../components/sidebar/Sidebar";
 import RightSidebar from "../components/RightSidebar/RightSidebar";
-import { Circle, Trash } from "lucide-react";
+import { Circle, CircleCheck ,Trash } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { formattedDate } from "../utils/formatDate";
+import { addTask, getTask, deleteTask, updateTask } from "../api/task.api";
 
 const TAGS = ["school", "work", "personal", "health", "finance"];
 
@@ -25,16 +26,9 @@ function Dashboard() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-           const res = await fetch("http://localhost:3000/api/tasks/addtask", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({ task, priority, tags: tags ? [tags] : [] }),
-            });
+        const data = await addTask(task, priority, tags)
 
-        const data = await res.json();
-
-        setTaskItems(prev => [data.task, ...prev]);
+        setTaskItems(prev => [...prev, data.task]);
         setTask("");
         setPriority("medium");
         setTags("school");
@@ -42,33 +36,20 @@ function Dashboard() {
     useEffect(() => {
         const fetchTaskItem = async() =>{
             try {
-                const res = await fetch("http://localhost:3000/api/tasks/alltasks", {
-                credentials: "include",
-            });
-            const taskData = await res.json();
-            console.log(taskData.tasks);
+            const taskData = await getTask();
             
             setTaskItems(taskData.tasks ?? []);
             } catch (err) {
                 console.error("Failed to fetch tasks:", err);
 
             }
-        
         }
         fetchTaskItem();
     }, []);
 
     const handleDelete = async (id) => {
     try {
-        const res = await fetch(`http://localhost:3000/api/tasks/${id}`, {
-            method: "DELETE",
-            credentials: "include",
-        });
-
-        if (!res.ok) {
-            console.error("Failed to delete task:", await res.json().catch(() => null));
-            return;
-        }
+        await deleteTask(id);
 
         setTaskItems(prev => prev.filter(taskItem => taskItem._id !== id));
     } catch (err) {
@@ -76,6 +57,20 @@ function Dashboard() {
     }
 };
     const filteredTasks = taskItems.filter((taskItem)=>taskItem.task.toLowerCase().includes(search.toLowerCase().trim()))
+
+    const handleUpdate = async(taskItem)=>{
+        try{
+            const data = await updateTask(taskItem._id, !taskItem.completed);
+
+            setTaskItems(prev =>
+                 prev.map(item=>(
+                 item._id === taskItem._id ? {...item, completed: data.task.completed}: item
+            )))
+            
+        }catch(err){
+            console.error("Failed to update task:", err);
+        }
+    }
 
     return (
         <div className="min-h-screen bg-main font-sans">
@@ -145,17 +140,23 @@ function Dashboard() {
                      {
                     filteredTasks.map((taskItem)=>(
                   <div key={taskItem._id}
-                        className="flex 
+                        className={`flex 
                               items-start gap-3 
                               px-4 py-3 mt-4 rounded-lg 
                               border transition-all duration-150 
-                              bg-card border-border hover:border-primary/30 
-                              hover:bg-card/80">
-                        <button>
-                            <Circle />
+                             ${
+                                taskItem.completed
+                              ? "bg-secondary/10 border-zinc-500/50 opacity-50"
+                              : "bg-card border-border hover:border-primary/30 hover:bg-card/80"
+                              }`}>
+                        <button onClick={()=>handleUpdate(taskItem)}>
+                             {taskItem.completed ?  <CircleCheck /> :  <Circle />}
                          </button>
                         <div className="flex-1 min-w-0">
-                    <p className="text-[13px] leading-relaxed text-foreground">
+                    <p className={`text-[13px] leading-relaxed ${
+                        taskItem.completed ? "line-through text-muted-foreground" : "text-foreground"
+                        }`}
+                    >
                         {taskItem.task}
                     </p>
 
@@ -180,7 +181,12 @@ function Dashboard() {
                         {
                           formattedDate(taskItem.createdAt.slice(0, 10))
                         }
+                        
                         </span>
+                         <span className="text-[10px] text-muted-foreground">·</span>
+                            <span className="text-[10px] text-muted-foreground">
+                            {taskItem.completed ? "completed":"not completed"}
+                         </span>
                     </div>
                     </div>
                     <button>
