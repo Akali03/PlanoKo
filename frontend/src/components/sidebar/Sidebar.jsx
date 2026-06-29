@@ -1,13 +1,12 @@
 import { LayoutGrid, Circle, CheckCircle2, Star, X } from "lucide-react";
 
-function Sidebar({ tasks = [], activeView, onViewChange, isOpen, onClose }) {
+function Sidebar({ totalTasks, completedTasks, urgentTasks, tasks = [], activeView, onViewChange, isOpen, onClose }) {
     const total = tasks.length;
     const completed = tasks.filter(t => t.completed).length;
     const active = total - completed;
     const highPriority = tasks.filter(t => t.priority === "high").length;
-    const urgent = tasks.filter(t => t.priority === "high" && !t.completed).length;
     const today = tasks.filter(t => t.dueToday && !t.completed).length;
-    const progress = total === 0 ? 0 : Math.round((completed / total) * 100);
+    const progress = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
     const views = [
         { key: "all", label: "All Tasks", icon: LayoutGrid, count: total },
@@ -69,9 +68,9 @@ function Sidebar({ tasks = [], activeView, onViewChange, isOpen, onClose }) {
                 <div className="border-t border-white/5 pt-6 mt-auto">
                     <p className="text-xs font-semibold tracking-wider text-slate-500 mb-3 px-2">STATS</p>
                     <div className="grid grid-cols-2 gap-3 mb-6">
-                        <StatCard label="Total" value={total} />
-                        <StatCard label="Done" value={completed} />
-                        <StatCard label="Urgent" value={urgent} />
+                        <StatCard label="Total" value={totalTasks} />
+                        <StatCard label="Done" value={completedTasks} />
+                        <StatCard label="Urgent" value={urgentTasks} />
                         <StatCard label="Today" value={today} />
                     </div>
                     <div className="px-1">

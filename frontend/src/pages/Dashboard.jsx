@@ -18,7 +18,9 @@ function Dashboard() {
     const [menuOpen, setMenuOpen] = useState(false);
     const [taskItems, setTaskItems] = useState([]);
     const [search, setSearch] = useState("");
-
+    const totalTasks = taskItems.length;
+    const completedTasks = taskItems.filter(task => task.completed).length;
+    const urgentTasks = taskItems.filter(task => task.priority === 'high').length;
 
     const handleTagChange = (e) => {
         setTags(e.target.value);
@@ -39,6 +41,7 @@ function Dashboard() {
             const taskData = await getTask();
             
             setTaskItems(taskData.tasks ?? []);
+            
             } catch (err) {
                 console.error("Failed to fetch tasks:", err);
 
@@ -46,6 +49,7 @@ function Dashboard() {
         }
         fetchTaskItem();
     }, []);
+
 
     const handleDelete = async (id) => {
     try {
@@ -85,6 +89,9 @@ function Dashboard() {
                 <Sidebar
                     activeView={activeView}
                     onViewChange={setActiveView}
+                    totalTasks={totalTasks}
+                    completedTasks={completedTasks}
+                    urgentTasks={urgentTasks}
                     isOpen={menuOpen}
                     onClose={() => setMenuOpen(false)}
                 />
