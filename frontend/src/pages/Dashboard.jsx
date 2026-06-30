@@ -20,6 +20,7 @@ function Dashboard() {
     const [search, setSearch] = useState("");
     const totalTasks = taskItems.length;
     const completedTasks = taskItems.filter(task => task.completed).length;
+    const activeTasks = taskItems.filter(task => task.completed === false).length;
     const urgentTasks = taskItems.filter(task => task.priority === 'high').length;
 
     const handleTagChange = (e) => {
@@ -60,7 +61,26 @@ function Dashboard() {
         console.error("Delete task request failed:", err);
     }
 };
-    const filteredTasks = taskItems.filter((taskItem)=>taskItem.task.toLowerCase().includes(search.toLowerCase().trim()))
+const filteredTasks = taskItems.filter((taskItem) => {
+    // Search filter
+    const matchesSearch = taskItem.task
+        .toLowerCase()
+        .includes(search.toLowerCase().trim());
+    // Sidebar filter
+    switch (activeView) {
+        case "completed":
+            return matchesSearch && taskItem.completed;
+
+        case "active":
+            return matchesSearch && !taskItem.completed;
+        
+        case "high":
+            return matchesSearch && taskItem.priority === "high";
+
+        default:
+            return matchesSearch;
+    }
+});
 
     const handleUpdate = async(taskItem)=>{
         try{
@@ -92,6 +112,7 @@ function Dashboard() {
                     totalTasks={totalTasks}
                     completedTasks={completedTasks}
                     urgentTasks={urgentTasks}
+                    activeTasks={activeTasks}
                     isOpen={menuOpen}
                     onClose={() => setMenuOpen(false)}
                 />
