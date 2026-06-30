@@ -1,11 +1,13 @@
 import { GoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Landing() {
+    const navigate = useNavigate();
+    const { setUser } = useAuth();
 
     const handleSuccess = async (credentialResponse) => {
         try {
-            console.log(credentialResponse);
-            
             const token = credentialResponse.credential;
             const res = await fetch("http://localhost:3000/api/auth/google", {
                 method: "POST",
@@ -14,8 +16,9 @@ function Landing() {
                 body: JSON.stringify({ token }),
             });
             const data = await res.json();
-            console.log("Login success:", data);
-       } catch (error) {
+            setUser(data.user);
+            navigate("/dashboard");
+        } catch (error) {
             console.log("Login failed:", error);
         }
     }
@@ -26,7 +29,7 @@ function Landing() {
                 <h1 className="text-4xl font-bold mb-2">PlanoKo</h1>
                 <p className="text-sm mb-8 text-primary">AI-Powered Task & Planning Assistant</p>
                 <GoogleLogin
-                    onSuccess={handleSuccess}   
+                    onSuccess={handleSuccess}
                     onError={() => console.log('login failed')}
                 />
             </div>
