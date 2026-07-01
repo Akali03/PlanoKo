@@ -5,11 +5,11 @@ import { useAuth } from "../context/AuthContext";
 function Landing() {
     const navigate = useNavigate();
     const { setUser } = useAuth();
-
+    const API_URL = `${import.meta.env.VITE_API_URL}`;
     const handleSuccess = async (credentialResponse) => {
         try {
             const token = credentialResponse.credential;
-            const res = await fetch("http://localhost:3000/api/auth/google", {
+            const res = await fetch(`${API_URL}/auth/google`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
