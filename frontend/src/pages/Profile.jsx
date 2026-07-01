@@ -9,7 +9,7 @@ function Profile() {
     const API_URL = `${import.meta.env.VITE_API_URL}`;
     const handleLogout = async () => {
         try {
-            await fetch(`${API_URL}/auth/logout`, {
+            await fetch(`${API_URL}/api/auth/logout`, {
                 method: "POST",
                 credentials: "include",
             });
