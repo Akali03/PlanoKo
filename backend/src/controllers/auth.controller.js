@@ -43,7 +43,11 @@ const getMe = async (req, res) => {
 }
 
 const logout = async (req, res) => {
-  res.clearCookie("accessToken");
+   res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
 
   res.json({ 
     message: "Logged out successfully"
