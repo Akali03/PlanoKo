@@ -1,5 +1,5 @@
-const API_URL = "http://localhost:3000/api/tasks";
-const AI_API_URL = "http://localhost:3000/api/ai";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/tasks`;
+const AI_API_URL = `${import.meta.env.VITE_API_URL}/api/ai`;
 
 export async function addTask(task, priority, tags){
       const res = await fetch(`${API_URL}/addtask`, {
