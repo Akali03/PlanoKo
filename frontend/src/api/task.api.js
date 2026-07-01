@@ -1,6 +1,8 @@
+const API_URL = "http://localhost:3000/api/tasks";
+const AI_API_URL = "http://localhost:3000/api/ai";
 
 export async function addTask(task, priority, tags){
-      const res = await fetch("http://localhost:3000/api/tasks/addtask", {
+      const res = await fetch(`${API_URL}/addtask`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -11,7 +13,7 @@ export async function addTask(task, priority, tags){
 }
 
 export async function getTask(){
-        const res = await fetch("http://localhost:3000/api/tasks/alltasks", {
+        const res = await fetch(`${API_URL}/alltasks`, {
                 credentials: "include",
             });
             
@@ -19,7 +21,7 @@ export async function getTask(){
 }
 
 export async function updateTask(id, completed){
-    const res = await fetch(`http://localhost:3000/api/tasks/update/${id}`, {
+    const res = await fetch(`${API_URL}/update/${id}`, {
         method: "PATCH", 
          headers: {
             "Content-Type": "application/json",
@@ -31,10 +33,19 @@ export async function updateTask(id, completed){
 }
 
 export async function deleteTask(id){
-         const res = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+         const res = await fetch(`${API_URL}/${id}`, {
             method: "DELETE",
             credentials: "include",
         });
 
         return await res.json();
+}
+
+export async function summarizeTasks(){
+    const res = await fetch(`${AI_API_URL}/summarize`, {
+        method: "GET",
+        credentials: "include",
+    });
+    
+    return await res.json();
 }

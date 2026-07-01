@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import AuthRoute from "./routes/auth.route.js";
 import TaskRoute from "./routes/task.route.js";
+import AIRoute from "./routes/ai.route.js";
 import cookieParser  from "cookie-parser";
 import { protect } from "./middleware/auth.middleware.js";
 dotenv.config();
@@ -26,5 +27,6 @@ app.get('/test',protect,(req, res)=>{
 })
 app.use('/api/auth',AuthRoute)
 app.use('/api/tasks', TaskRoute)
+app.use('/api/ai', AIRoute);
 
 export default app;
