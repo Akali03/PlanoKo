@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await fetch(`${API_URL}/auth/me`, { credentials: "include" });
+                const res = await fetch(`${API_URL}api/auth/me`, { credentials: "include" });
                 const data = res.ok ? await res.json() : null;
                 setUser(data?.user || null);
             } catch {

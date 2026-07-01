@@ -9,7 +9,7 @@ function Landing() {
     const handleSuccess = async (credentialResponse) => {
         try {
             const token = credentialResponse.credential;
-            const res = await fetch(`${API_URL}/auth/google`, {
+            const res = await fetch(`${API_URL}/api/auth/google`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
