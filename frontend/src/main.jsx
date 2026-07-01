@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthContext";
 
 const CLIENT_ID = "1004035939684-ef87vfuqopcu1kmamof94vk2phthnv8k.apps.googleusercontent.com"
 createRoot(document.getElementById('root')).render(
+  <StrictMode>
     <BrowserRouter>
       <GoogleOAuthProvider clientId={CLIENT_ID}>
         <AuthProvider>
@@ -15,4 +16,5 @@ createRoot(document.getElementById('root')).render(
         </AuthProvider>
       </GoogleOAuthProvider>
     </BrowserRouter>
+  </StrictMode>,
 )
